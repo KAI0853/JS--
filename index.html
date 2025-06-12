@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>賴文凱｜個人介紹</title>
+  <style>
+    /* ...原有CSS... */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html {
+      height: 100%;
+      font-family: 'Roboto', 'Segoe UI', '微軟正黑體', Arial, sans-serif;
+      background-color: #0f2027;
+      color: #fff;
+      line-height: 1.6;
+      overflow: hidden;
+    }
+    #home {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #particles-js {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 0;
+    }
+    .welcome-container {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(20, 30, 40, 0.82);
+      padding: 48px 36px;
+      border-radius: 22px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+      text-align: center;
+      z-index: 1;
+      min-width: 320px;
+      max-width: 90vw;
+      transition: opacity 0.5s, filter 0.5s, transform 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+    }
+    .welcome-container.hide {
+      animation: welcomeOut 0.7s cubic-bezier(.68,-0.55,.27,1.55) forwards;
+    }
+    @keyframes welcomeOut {
+      0% {
+        opacity: 1;
+        filter: blur(0px);
+        transform: translate(-50%, -50%) scale(1) rotateY(0deg);
+      }
+      100% {
+        opacity: 0;
+        filter: blur(20px);
+        transform: translate(-50%, -50%) scale(0.8) rotateY(-30deg);
+      }
+    }
+    .about-hacker-container {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .about-hacker-card {
+      position: absolute;
+      width: 340px;
+      max-width: 90vw;
+      background: rgba(20, 30, 40, 0.95);
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(0,210,255,0.18);
+      color: #fff;
+      padding: 32px 24px;
+      opacity: 0;
+      filter: blur(20px);
+      transform: scale(0.7) rotateY(40deg);
+      animation: hackerIn 0.8s cubic-bezier(.68,-0.55,.27,1.55) forwards;
+      pointer-events: auto;
+      border: 1.5px solid #00d2ff33;
+      text-align: left;
+      user-select: text;
+      backdrop-filter: blur(2px);
+      cursor: grab;
+      transition: box-shadow 0.2s;
+    }
+    .about-hacker-card.dragging {
+      z-index: 10 !important;
+      box-shadow: 0 12px 48px 8px #00d2ff55, 0 8px 32px rgba(0,210,255,0.18);
+      cursor: grabbing;
+    }
+    .about-hacker-card h1 {
+      color: #00d2ff;
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+      letter-spacing: 2px;
+      text-shadow: 0 0 8px #00d2ff44;
+      cursor: move;
+      user-select: none;
+    }
+    .about-hacker-card ul {
+      margin: 12px 0 18px 18px;
+      font-size: 1.05rem;
+    }
+    .about-hacker-card a {
+      color: #00d2ff;
+      text-decoration: none;
+    }
+    .about-hacker-card a:hover {
+      text-decoration: underline;
+      color: #3a7bd5;
+    }
+    .about-hacker-card .card-footer {
+      margin-top: 16px;
+      font-size: 0.95rem;
+      color: #00d2ff99;
+      text-align: right;
+      font-family: 'Consolas', 'Menlo', monospace;
+      letter-spacing: 1px;
+    }
+    .about-hacker-card .icon {
+      font-size: 1.2em;
+      margin-right: 6px;
+      vertical-align: middle;
+      filter: drop-shadow(0 0 2px #00d2ff88);
+    }
+    @keyframes hackerIn {
+      0% {
+        opacity: 0;
+        filter: blur(20px);
+        transform: scale(0.7) rotateY(40deg);
+      }
+      60% {
+        opacity: 1;
+        filter: blur(0px);
+        transform: scale(1.08) rotateY(-8deg);
+      }
+      100% {
+        opacity: 1;
+        filter: blur(0px);
+        transform: scale(1) rotateY(0deg);
+      }
+    }
+    @media (max-width: 600px) {
+      .welcome-container, .about-hacker-card {
+        padding: 18px 4px;
+        min-width: 0;
+        width: 90vw;
+      }
+      .about-hacker-card h1 {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section id="home">
+    <div id="particles-js"></div>
+    <div class="welcome-container">
+      <h1>Welcome my website</h1>
+      <p>開發者 | 愛玩遊戲 | 喜歡挑戰</p>
+      <button id="enterBtn">進入我的世界</button>
+    </div>
+    <div class="about-hacker-container" id="about-hacker-container"></div>
+    <!-- 隱藏的音樂播放器 -->
+    <audio id="bgm" src="https://www.youtube.com/watch?v=HPKydvIJOf0" preload="auto"></audio>
+  </section>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+  <script>
+    // 粒子背景初始化
+    particlesJS("particles-js", {
+      "particles": {
+        "number": {
+          "value": 80,
+          "density": { "enable": true, "value_area": 800 }
+        },
+        "color": { "value": "#00d2ff" },
+        "shape": {
+          "type": "circle",
+          "stroke": { "width": 0, "color": "#000000" },
+          "polygon": { "nb_sides": 5 }
+        },
+        "opacity": {
+          "value": 0.5,
+          "random": false,
+          "anim": { "enable": false }
+        },
+        "size": {
+          "value": 3,
+          "random": true,
+          "anim": { "enable": false }
+        },
+        "line_linked": {
+          "enable": true,
+          "distance": 150,
+          "color": "#00d2ff",
+          "opacity": 0.4,
+          "width": 1
+        },
+        "move": {
+          "enable": true,
+          "speed": 2,
+          "direction": "none",
+          "random": false,
+          "straight": false,
+          "out_mode": "out",
+          "bounce": false
+        }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": { "enable": true, "mode": "grab" },
+          "onclick": { "enable": true, "mode": "push" },
+          "resize": true
+        },
+        "modes": {
+          "grab": { "distance": 140, "line_linked": { "opacity": 1 } },
+          "bubble": { "distance": 400, "size": 40, "duration": 2, "opacity": 8, "speed": 3 },
+          "repulse": { "distance": 200, "duration": 0.4 },
+          "push": { "particles_nb": 4 },
+          "remove": { "particles_nb": 2 }
+        }
+      },
+      "retina_detect": true
+    });
+
+    // 多個卡片內容
+    const aboutCards = [
+      {
+        title: "關於我",
+        html: `<p>我是賴文凱，目前是虎尾科大五專資訊科的學生，熱衷於嵌入式系統和物聯網技術。</p>`
+      },
+      {
+        title: "技能",
+        html: `<ul>
+          <li>Python 開發</li>
+          <li>JavaScript 前端/後端開發</li>
+          <li>嵌入式系統</li>
+          <li>物聯網技術</li>
+          <li>遊戲開發</li>
+        </ul>`
+      },
+      {
+        title: "聯絡方式",
+        html: `<p><span class="icon">📧</span>Email: <a href="mailto:asdfghoiyyhjo@gmail.com">asdfghoiyyhjo@gmail.com</a></p>
+               <p><span class="icon">📷</span>IG: <a href="https://www.instagram.com/kaikai._.0503/" target="_blank">@kaikai._.0503</a></p>`
+      },
+      {
+        title: "興趣",
+        html: `<ul>
+          <li>遊戲設計</li>
+          <li>音樂</li>
+          <li>攝影</li>
+          <li>電子產品</li>
+          <li>戶外運動</li>
+        </ul>`
+      },
+      {
+        title: "目標",
+        html: `<p>持續學習新技術，挑戰自我，成為全端高手！</p>`
+      },
+      {
+        title: "作品集",
+        html:  `<p>個人網站</p>`
+      },
+      {
+        title: "信念",
+        html: `<p>「唯有不斷嘗試，才能不斷進步。」</p>`
+      },
+      {
+        title: "喜歡的語言",
+        html: `<ul>
+          <li>Python</li>
+          <li>JavaScript</li>
+          <li>C/C++</li>
+        </ul>`
+      },
+      {
+        title: "學習中",
+        html: `<ul>
+          <li>React</li>
+          <li>Node.js</li>
+          <li>Docker</li>
+        </ul>`
+      },
+      {
+        title: "生活態度",
+        html: `<p>保持好奇，享受每一天的挑戰！</p>`
+      }
+    ];
+
+    // 隨機產生螢幕上的位置，並加上旋轉與縮放
+    function randomPosition(idx, total) {
+      const padding = 20;
+      const cardW = 340, cardH = 220;
+      const w = window.innerWidth - cardW - padding * 2;
+      const h = window.innerHeight - cardH - padding * 2;
+      // 讓每個卡片分佈在不同象限，遠離中心
+      const angle = (idx / total) * 2 * Math.PI + Math.random() * 0.5;
+      // 半徑範圍更大，讓卡片分布更外圍
+      const minR = Math.min(w, h) * 0.45;
+      const maxR = Math.min(w, h) * 0.48;
+      const radius = minR + Math.random() * (maxR - minR);
+      const cx = window.innerWidth / 2 + Math.cos(angle) * radius;
+      const cy = window.innerHeight / 2 + Math.sin(angle) * radius;
+      return {
+        left: Math.max(padding, Math.min(cx, window.innerWidth - cardW - padding)),
+        top: Math.max(padding, Math.min(cy, window.innerHeight - cardH - padding)),
+        rotate: (Math.random() - 0.5) * 18, // -9~+9度
+        scale: 0.92 + Math.random() * 0.16 // 0.92~1.08
+      };
+    }
+
+    // 拖曳功能（整個卡片都能拖）
+    function makeDraggable(card) {
+      let offsetX = 0, offsetY = 0, startX = 0, startY = 0, dragging = false;
+
+      function onMouseDown(e) {
+        e.preventDefault();
+        dragging = true;
+        card.classList.add('dragging');
+        startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+        startY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+        const rect = card.getBoundingClientRect();
+        offsetX = startX - rect.left;
+        offsetY = startY - rect.top;
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+        document.addEventListener('touchmove', onMouseMove, {passive: false});
+        document.addEventListener('touchend', onMouseUp);
+      }
+      function onMouseMove(e) {
+        if (!dragging) return;
+        e.preventDefault();
+        let clientX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
+        let clientY = e.type.startsWith('touch') ? e.touches[0].clientY : e.clientY;
+        let left = clientX - offsetX;
+        let top = clientY - offsetY;
+        // 限制拖曳範圍
+        left = Math.max(0, Math.min(left, window.innerWidth - card.offsetWidth));
+        top = Math.max(0, Math.min(top, window.innerHeight - card.offsetHeight));
+        card.style.left = left + 'px';
+        card.style.top = top + 'px';
+      }
+      function onMouseUp() {
+        dragging = false;
+        card.classList.remove('dragging');
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+        document.removeEventListener('touchmove', onMouseMove);
+        document.removeEventListener('touchend', onMouseUp);
+      }
+      card.addEventListener('mousedown', onMouseDown);
+      card.addEventListener('touchstart', onMouseDown, {passive: false});
+    }
+
+    document.getElementById('enterBtn').onclick = function() {
+      const welcome = document.querySelector('.welcome-container');
+      const container = document.getElementById('about-hacker-container');
+      // 播放音樂
+      const bgm = document.getElementById('bgm');
+      if (bgm) {
+        bgm.currentTime = 0;
+        bgm.play();
+      }
+      welcome.classList.add('hide');
+      setTimeout(() => {
+        welcome.style.display = 'none';
+        container.innerHTML = '';
+        aboutCards.forEach((card, idx) => {
+          const div = document.createElement('div');
+          div.className = 'about-hacker-card';
+          div.innerHTML = `<h1>${card.title}</h1>${card.html}<div class="card-footer">#${idx+1}</div>`;
+          const pos = randomPosition(idx, aboutCards.length);
+          div.style.left = pos.left + 'px';
+          div.style.top = pos.top + 'px';
+          div.style.transform += ` scale(${pos.scale}) rotate(${pos.rotate}deg)`;
+          div.style.animationDelay = (idx * 0.11 + Math.random() * 0.12) + 's';
+          makeDraggable(div);
+          container.appendChild(div);
+        });
+      }, 700);
+    };
+  </script>
+</body>
+</html>
